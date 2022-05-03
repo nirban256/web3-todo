@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import Manager from "./artifacts/contracts/Manager.sol/Manager.json";
 
@@ -11,7 +11,7 @@ function App() {
   const [tickets, setTickets] = useState([]);
 
   const initConnection = async () => {
-    if(typeof window.ethereum !== "undefined") {
+    if (typeof window.ethereum !== "undefined") {
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts"
       });
@@ -21,7 +21,8 @@ function App() {
       setAccount(accounts[0]);
       setContract(
         new ethers.Contract(
-          "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+          // deployed contract address
+          "",
           Manager.abi,
           signer
         )
@@ -67,19 +68,93 @@ function App() {
         <p>Task Manager</p>
         {account !== "" ? <p>{account.slice(0, 9)}</p> : <button className='big_button' onClick={initConnection}>Connect to App</button>}
       </div>
-      <div className="input-section"></div>
-      <div className="main">
-        <div className="main_col" style={{backgroundColor: "blueviolet"}}>
-          <div className="main_col_heading">Todo</div>
+
+      <div className="input-section">
+        <div>
+          <button className='big_button' onClick={() => createTicket(name)}>
+            Create Ticket
+          </button>
+          <input type="text" className="input" onChange={(e) => { setName(e.target.value) }} placeholder="Ticket Name" />
         </div>
-        <div className="main_col" style={{backgroundColor: "gray"}}>
-          <div className="main_col_heading">Busy</div>
-        </div>
-        <div className="main_col" style={{backgroundColor: "blanchedalmond"}}>
-          <div className="main_col_heading">Done</div>
-        </div>
+        <button className='big_button' onClick={() => getAllTickets()}>
+          Load Tickets
+        </button>
       </div>
-    </div>
+
+      <div className="main">
+        <div className="main_col" style={{ backgroundColor: "blueviolet" }}>
+          <div className="main_col_heading">Todo</div>
+          {tickets
+            .map((t, i) => ({ id: i, item: t }))
+            .filter((t) => t.item.status === 0)
+            .map((ticket, index) => {
+              return (
+                <div className="main_ticket_card">
+                  <p className="main_ticket_card_id">#{ticket.id}</p>
+                  <p key={index}>{ticket.item.name}</p>
+                  <div className="main_ticket_button_section">
+                    <button className="small_button" style={{ backgroundColor: 'lightblue' }} onClick={() => { updateStatus(ticket.id, 1) }}>Busy</button>
+
+                    <button className="small_button" style={{ backgroundColor: 'lightgreen' }} onClick={() => { updateStatus(ticket.id, 2) }}>Done</button>
+
+                    <button className="small_button" style={{ backgroundColor: 'lightgray' }} onClick={() => { renameTickets(ticket.id) }}>Rename</button>
+
+                  </div>
+                </div>
+              );
+            }
+            )}
+        </div >
+
+        <div className="main_col" style={{ backgroundColor: "gray" }}>
+          <div className="main_col_heading">Busy</div>
+          {tickets
+            .map((t, i) => ({ id: i, item: t }))
+            .filter((t) => t.item.status === 1)
+            .map((ticket, index) => {
+              return (
+                <div className="main_ticket_card">
+                  <p className="main_ticket_card_id">#{ticket.id}</p>
+                  <p key={index}>{ticket.item.name}</p>
+                  <div className="main_ticket_button_section">
+                    <button className="small_button" style={{ backgroundColor: 'lightblue' }} onClick={() => { updateStatus(ticket.id, 0) }}>Todo</button>
+
+                    <button className="small_button" style={{ backgroundColor: 'lightgreen' }} onClick={() => { updateStatus(ticket.id, 2) }}>Done</button>
+
+                    <button className="small_button" style={{ backgroundColor: 'lightgray' }} onClick={() => { renameTickets(ticket.id) }}>Rename</button>
+
+                  </div>
+                </div>
+              )
+            }
+            )}
+        </div>
+
+        <div className="main_col" style={{ backgroundColor: "green" }}>
+          <div className="main_col_heading">Done</div>
+          {tickets
+            .map((t, i) => ({ id: i, item: t }))
+            .filter((t) => t.item.status === 2)
+            .map((ticket, index) => {
+              return (
+                <div className="main_ticket_card">
+                  <p className="main_ticket_card_id">#{ticket.id}</p>
+                  <p key={index}>{ticket.item.name}</p>
+                  <div className="main_ticket_button_section">
+                    <button className="small_button" style={{ backgroundColor: 'lightblue' }} onClick={() => { updateStatus(ticket.id, 0) }}>Todo</button>
+
+                    <button className="small_button" style={{ backgroundColor: 'lightgreen' }} onClick={() => { updateStatus(ticket.id, 1) }}>Busy</button>
+
+                    <button className="small_button" style={{ backgroundColor: 'lightgray' }} onClick={() => { renameTickets(ticket.id) }}>Rename</button>
+
+                  </div>
+                </div>
+              );
+            }
+            )}
+        </div>
+      </div >
+    </div >
   );
 }
 

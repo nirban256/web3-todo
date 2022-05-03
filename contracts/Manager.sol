@@ -2,7 +2,7 @@
 pragma solidity ^0.8.4;
 
 contract Manager {
-    struct Ticket{
+    struct Ticket {
         uint8 status;
         string name;
     }
@@ -12,15 +12,15 @@ contract Manager {
         tickets.push(Ticket(0, _name));
     }
 
-    function updateTicketName(uint _index, string memory _name) external {
+    function updateTicketName(uint256 _index, string memory _name) external {
         tickets[_index].name = _name;
     }
 
-    function updateStatus(uint _index, uint8 _status) external {
+    function updateStatus(uint256 _index, uint8 _status) external {
         tickets[_index].status = _status;
     }
 
-    function getTickets() external view returns(Ticket[] memory) {
+    function getTickets() external view returns (Ticket[] memory) {
         return tickets;
     }
 }
