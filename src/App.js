@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import Manager from "./artifacts/contracts/Manager.sol/Manager.json";
+import secrets from "./secrets.json";
 
 function App() {
 
@@ -21,8 +22,7 @@ function App() {
       setAccount(accounts[0]);
       setContract(
         new ethers.Contract(
-          // deployed contract address
-          "",
+          secrets['contract-address'],
           Manager.abi,
           signer
         )
