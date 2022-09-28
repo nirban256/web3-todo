@@ -65,19 +65,19 @@ function App() {
   return (
     <div className='page'>
       <div className="header">
-        <p>Task Manager</p>
-        {account !== "" ? <p>{account.slice(0, 9)}</p> : <button className='big_button' onClick={initConnection}>Connect to App</button>}
+        <p>Todo List</p>
+        {account !== "" ? <p>{`${account.slice(0, 5)}...${account.slice(38, 44)}`}</p> : <button className='big_button' onClick={initConnection}>Connect to App</button>}
       </div>
 
       <div className="input-section">
         <div>
           <button className='big_button' onClick={() => createTicket(name)}>
-            Create Ticket
+            Create Todo
           </button>
           <input type="text" className="input" onChange={(e) => { setName(e.target.value) }} placeholder="Ticket Name" />
         </div>
         <button className='big_button' onClick={() => getAllTickets()}>
-          Load Tickets
+          Load Todo
         </button>
       </div>
 
